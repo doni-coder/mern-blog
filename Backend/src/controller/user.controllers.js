@@ -1,0 +1,104 @@
+import { User } from "../models/user.models.js";
+import { ApiError } from "../utils/apiErrorHandle.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { ApiResponse } from "../utils/apiHandleResponse.js";
+
+const userRegister = asyncHandler(async (req, res) => {
+  const { username, email, password } = req.body;
+
+  if ([email, username, password].some((field) => field?.trim() === " ")) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const isUserExist = await User.findOne({
+    $or: [{ email }, { username }],
+  });
+
+  if (isUserExist) {
+    throw new ApiError(400, "user already exist");
+  }
+
+  const userProfilePic_localPath = req.file?.path;
+  console.log(userProfilePic_localPath);
+
+  if (!userProfilePic_localPath) {
+    throw new ApiError(400, "user Profile required");
+  }
+
+  const profilePic = await uploadToCloudinary(userProfilePic_localPath);
+
+  if (!profilePic) {
+    throw new ApiError(500, "failed to upload profile picture");
+  }
+
+  const user = await User.create({
+    username: username.toLowerCase(),
+    email,
+    password,
+    profilePic: profilePic.url,
+  });
+
+  const createdUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+
+  if (!createdUser) {
+    throw new ApiError(500, "something went wrong usernot created");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, createdUser, "user created successful"));
+});
+
+const generateAccessAndRefreshToken = async (user_id) => {
+  const user = await User.findById(user_id);
+  const refreshToken = user.generateRefreshToken();
+  const accessToken = user.generateAccessToken();
+  return { refreshToken, accessToken };
+};
+
+const userLogin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  console.log(req.body);
+  if (!email && !password) {
+    throw new ApiError(400, "please enter email and password");
+  }
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(400, "user does not exist");
+  }
+  console.log(req.body.password);
+  const isPasswordValid = await user.isPasswordCorrect(password);
+
+  if (!isPasswordValid) {
+    throw new ApiError(400, "incorrect password");
+  }
+  const { refreshToken, accessToken } = await generateAccessAndRefreshToken(
+    user._id
+  );
+
+  if (!refreshToken && !accessToken) {
+    throw new ApiError(500, "tokens cannot generated");
+  }
+
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  };
+
+  return res
+    .status(200)
+    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, options)
+    .json(new ApiResponse(200, loggedInUser, "login successful"));
+});
+
+export { userRegister, userLogin };
