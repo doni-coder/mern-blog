@@ -101,4 +101,73 @@ const userLogin = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, loggedInUser, "login successful"));
 });
 
-export { userRegister, userLogin };
+const userLogout = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        refreshToken: undefined,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, { logout: "success" }, "success"));
+});
+
+const isLoggedIn = asyncHandler(async (req, res) => {
+  const token = req.cookies?.accessToken;
+
+  if (!token) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { isLogged: false }, "user not loggedin"));
+  } else {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { isLogged: true }, "user loggedin"));
+  }
+});
+
+const updateProfilePic = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+
+  if (!user) {
+    throw new ApiError(400, "user not found");
+  }
+
+  const ProfilePicLocalPath = req.file?.path;
+  if (!ProfilePicLocalPath) {
+    throw new ApiError(400, "please upload profile picture");
+  }
+
+  const newProfilePic = await uploadToCloudinary(ProfilePicLocalPath);
+
+  if (!newProfilePic) {
+    throw new ApiError(500, "unable to upload picture");
+  }
+
+  const updatedProfile = await User.findByIdAndUpdate(user._id, {
+    $set:{
+      profilePic: newProfilePic.url,
+    }
+  }).select("-password -refreshToken");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedProfile, "profile pic updated"));
+});
+
+export { userRegister, userLogin, userLogout, isLoggedIn, updateProfilePic };
