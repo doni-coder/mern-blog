@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userRegister,userLogin, userLogout,isLoggedIn,updateProfilePic } from "../controller/user.controllers.js";
+import { userRegister,userLogin, userLogout,isLoggedIn,updateProfilePic,getCurrentUser } from "../controller/user.controllers.js";
 import { upload } from "../middleware/multer.moddleware.js";
 import { verifyJwt } from "../middleware/auth.middleware.js";
 
@@ -12,5 +12,6 @@ router.route("/status").get(isLoggedIn)
 // protected route
 router.route("/logout").post(verifyJwt,userLogout)
 router.route("/updateProfilePic").put(verifyJwt,upload.single("profilePic"),updateProfilePic)
+router.route("/userProfile").get(verifyJwt,getCurrentUser)
 
 export default router;

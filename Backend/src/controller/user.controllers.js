@@ -160,9 +160,9 @@ const updateProfilePic = asyncHandler(async (req, res) => {
   }
 
   const updatedProfile = await User.findByIdAndUpdate(user._id, {
-    $set:{
+    $set: {
       profilePic: newProfilePic.url,
-    }
+    },
   }).select("-password -refreshToken");
 
   return res
@@ -170,4 +170,21 @@ const updateProfilePic = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedProfile, "profile pic updated"));
 });
 
-export { userRegister, userLogin, userLogout, isLoggedIn, updateProfilePic };
+const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = User.findById(req.user?._id)
+
+  if (!user) {
+    throw new ApiError(400, "user not found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, req.user, "user found"));
+});
+
+export {
+  userRegister,
+  userLogin,
+  userLogout,
+  isLoggedIn,
+  updateProfilePic,
+  getCurrentUser,
+};
