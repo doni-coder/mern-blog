@@ -12,26 +12,27 @@ function Hero() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: false, amount: 0.25 }}
-          className="absolute top-[17vh] md:top-[22vh] left-5 md:left-24 w-[90%]"
+          className="absolute top-[17vh] md:top-[22vh] left-5 pr-3 md:left-24 w-[90%]"
         >
           <motion.h1
             variants={textVariant(1)}
             initial="hidden"
             whileInView="show"
-            className="text-white text-6xl font-bold text-green-600 relative"
+            className=" text-6xl font-bold text-green-600 relative"
           >
-            Om prakash
+          Create <br /> Blog spot
           </motion.h1>
           <motion.p
             variants={textVariant(0.75)}
             initial="hidden"
             whileInView="show"
-            className="text-white mt-3 mb-4 text-[18px]"
+            className="text-white mt-5 mb-4 text-[18px]"
           >
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur amet nemo iure omnis dolores nostrum mollitia eum porro fugiat officiis?
+            Create your blog and share your knowledge in this platform , read other blog post from different author and shape your knowledge .
+            This platform gives you freedom to share any kind of content <b>A-Z</b> .
           </motion.p>
           <Highlight className="text-black dark:text-white text-3xl pl-3 pr-3">
-            Om prakash
+            share knowledge
           </Highlight>
         </motion.div>
       </HeroHighlight>

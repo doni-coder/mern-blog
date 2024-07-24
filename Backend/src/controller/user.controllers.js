@@ -16,7 +16,7 @@ const userRegister = asyncHandler(async (req, res) => {
   });
 
   if (isUserExist) {
-    throw new ApiError(400, "user already exist");
+    return res.status(400).json(new ApiResponse(400,{message:"user already exist"},"user already exist"))
   }
 
   const userProfilePic_localPath = req.file?.path;
@@ -44,12 +44,12 @@ const userRegister = asyncHandler(async (req, res) => {
   );
 
   if (!createdUser) {
-    throw new ApiError(500, "something went wrong usernot created");
+    return res.status(500).json(new ApiResponse({message:"something wrong"},"failed"))
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, createdUser, "user created successful"));
+    .json(new ApiResponse(200, createdUser, "user created"));
 });
 
 const generateAccessAndRefreshToken = async (user_id) => {
@@ -68,13 +68,13 @@ const userLogin = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new ApiError(400, "user does not exist");
+    return res.status(400).json(new ApiResponse(400,{message:"email not registered"},"email not registered"))
   }
   console.log(req.body.password);
   const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
-    throw new ApiError(400, "incorrect password");
+    return res.status(400).json(new ApiResponse(400,{message:"incorrect password"},"password error"))
   }
   const { refreshToken, accessToken } = await generateAccessAndRefreshToken(
     user._id

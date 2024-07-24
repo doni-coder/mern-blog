@@ -1,13 +1,27 @@
 import React, { useState } from "react";
 import { HoveredLink, Menu, MenuItem } from "../ui/navbar-menu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useBlogContext } from "../../context/ContextProvider";
 import Profile from "../ProfileBtn/Profile";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 function NavBar() {
   const [active, setActive] = useState(null);
-  const { context } = useBlogContext();
-  console.log(active);
+  const { context, dispatch } = useBlogContext();
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    const response = await axios.post(
+      "http://localhost:5001/api/v1/user/logout"
+    );
+    console.log(response);
+    if (response.status === 200) {
+      dispatch({ type: "LOGOUT" });
+      navigate("/")
+    }
+  };
+
   return (
     <div className="p-0">
       <Menu setActive={setActive}>
@@ -18,46 +32,45 @@ function NavBar() {
           <div>
             {context.isLoggedIn ? (
               <div className="flex items-center gap-10">
-                <HoveredLink to="/blogPage">Explore Blog</HoveredLink>
+                <HoveredLink to="/explore-blogs">Blogs</HoveredLink>
 
                 <MenuItem
                   setActive={setActive}
                   active={active}
-                  item={
-                    <Profile profilePic="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQLHZh0aF5Og2DF4G19yPVx_QGjXfaBByFZA&s" />
-                  }
+                  item={<Profile profilePic={context.profilePic} />}
                 >
                   <div className="text-white justify-center flex flex-col">
                     <div>
-                      <span>Name : </span>
-                      <span>doni</span>
+                      <span>username : </span>
+                      <span>{context.userDetails.username}</span>
                     </div>
                     <div>
                       <span>Email : </span>
-                      <span>donisahu225@gmail.com</span>
+                      <span>{context.userDetails.email}</span>
                     </div>
                     <button
                       type="button"
-                      class="mt-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-[10px] py-[5px] me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                      onClick={handleLogout}
+                      className="mt-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-[10px] py-[5px] me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                     >
                       logout
                     </button>
                     <button
                       type="button"
-                      class="mt-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-[10px] py-[5px] me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-green-600 dark:hover:bg-green-700 dark:hover:border-green-600 dark:focus:ring-green-700"
+                      className="mt-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-[10px] py-[5px] me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-green-600 dark:hover:bg-green-700 dark:hover:border-green-600 dark:focus:ring-green-700"
                     >
-                      My Blogs
+                      <Link to={"/my-blogs"}>My Blogs</Link>
                     </button>
                   </div>
                 </MenuItem>
               </div>
             ) : (
-              <button
-                type="button"
-                class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
-              >
-                login
-              </button>
+              <Link to="/login">
+                <button
+                  type="button"
+                  className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
+                >login</button>
+              </Link>
             )}
           </div>
         </div>

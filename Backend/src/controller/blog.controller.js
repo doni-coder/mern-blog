@@ -13,7 +13,7 @@ const createBlog = asyncHandler(async (req, res) => {
   const blogImageLocal = req.file?.path;
 
   if (!blogImageLocal) {
-    throw new ApiError(400, "please provide blogImage");
+    return res.status(400).json(new ApiResponse(400, {},"please provide blogImage"));
   }
 
   const blogImage = await uploadToCloudinary(blogImageLocal);
@@ -39,7 +39,7 @@ const createBlog = asyncHandler(async (req, res) => {
 
   await User.findByIdAndUpdate(user._id, {
     $set: {
-      blogs: [...user.blogs,createdBlog._id],
+      blogs: [...user.blogs, createdBlog],
     },
   });
 
@@ -79,28 +79,54 @@ const editBlog = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, blog, "blog updated"));
 });
 
-const deleteBlog = asyncHandler(async (req,res)=>{
-  const {id} = req.params
-  const user = await User.findById(req.user?._id)
+const deleteBlog = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(req.user?._id);
   if (!user) {
-    throw new ApiError(400,"user not authenticated")
+    throw new ApiError(400, "user not authenticated");
   }
 
   console.log(id);
 
-  const blog = await Blog.findByIdAndDelete(id)
+  const blog = await Blog.findByIdAndDelete(id);
 
   if (!blog) {
-    throw new ApiError(500,"something went wrong")
+    throw new ApiError(500, "something went wrong");
   }
-  const updatedBlogsArray = user.blogs.filter((blogId)=> blogId != id)
-  await User.findByIdAndUpdate(user._id,{
-    $set:{
-      blogs:updatedBlogsArray
-    }
-  })
+  const updatedBlogsArray = user.blogs.filter((blogId) => blogId._id != id);
 
-  return res.status(200).json(new ApiResponse(200,blog,"blog deleted"))
-})
+  await User.findByIdAndUpdate(user._id, {
+    $set: {
+      blogs: updatedBlogsArray,
+    },
+  });
 
-export { createBlog, editBlog,deleteBlog };
+  return res.status(200).json(new ApiResponse(200, blog, "blog deleted"));
+});
+
+const getAllBlogs = asyncHandler(async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    throw new ApiError("not authenticated");
+  }
+  const allBlogs = await Blog.find({});
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, allBlogs, "fetched all blogs"));
+});
+
+const getBlogById = asyncHandler(async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    throw new ApiError("not authenticated");
+  }
+  const { id } = req.params;
+  const blog = await Blog.findById(id);
+  if (!blog) {
+    throw new ApiError(404, "blog not found");
+  }
+  return res.status(200).json(new ApiResponse(200, blog, "fetched blog"));
+});
+
+export { createBlog, editBlog, deleteBlog, getAllBlogs, getBlogById };

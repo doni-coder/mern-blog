@@ -21,10 +21,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    blogs:[{
-      type: Schema.Types.ObjectId,
-      ref:"blog" 
-    }],
+    blogs:[{}]
+    ,
     refreshToken: {
       type: String,
     },
