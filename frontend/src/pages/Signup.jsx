@@ -67,6 +67,7 @@ function Signup() {
         initial="hidden"
         whileInView="show"
       >
+        <p className="text-yellow-500 pb-2 text-center text-[13px]">* Profile pic should be passport size and <br /> not more than 3mb</p>
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
           <h2 className="text-2xl font-bold text-center mb-4 text-white">
             Register
