@@ -28,7 +28,7 @@ function Login() {
     e.preventDefault();
     dispatch({ type: "SET_LOADING", payload: true });
     const response = await axios
-      .post("http://localhost:5001/api/v1/user/login", formData)
+      .post("https://mern-blog-backend-ny24.onrender.com/api/v1/user/login", formData)
       .then((response) => {
         const result = response.data;
         dispatch({ type: "SET_LOADING", payload: false });

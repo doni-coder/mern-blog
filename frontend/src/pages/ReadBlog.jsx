@@ -12,7 +12,7 @@ function ReadBlog({ title, description, blogImage }) {
     dispatch({ type: "SET_LOADING", payload: true });
     const getSingleBlog = async () => {
       const response = await axios.get(
-        `http://localhost:5001/api/v1/blog/get-blog/${id}`
+        `https://mern-blog-backend-ny24.onrender.com/api/v1/blog/get-blog/${id}`
       );
       const result = response.data.data;
       dispatch({ type: "SET_SINGLE_BLOG", payload: result });

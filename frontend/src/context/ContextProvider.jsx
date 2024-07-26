@@ -25,7 +25,7 @@ const ContextProvider = ({ children }) => {
 
   const getUserProfile = async () => {
     const response = await axios.get(
-      "http://localhost:5001/api/v1/user/userProfile"
+      "https://mern-blog-backend-ny24.onrender.com/api/v1/user/userProfile"
     );
     console.log(response);
     return response.data.data;
@@ -36,7 +36,7 @@ const ContextProvider = ({ children }) => {
   useEffect(() => {
     const getStatus = async () => {
       const response = await axios.get(
-        "http://localhost:5001/api/v1/user/status"
+        "https://mern-blog-backend-ny24.onrender.com/api/v1/user/status"
       );
       console.log(response);
       const result = response.data.data;
@@ -53,7 +53,7 @@ const ContextProvider = ({ children }) => {
   useEffect(() => {
     const getBlogs = async () => {
       const response = await axios.get(
-        "http://localhost:5001/api/v1/blog/get-all-blogs"
+        "https://mern-blog-backend-ny24.onrender.com/api/v1/blog/get-all-blogs"
       );
       console.log(response);
       const result = response.data.data;

@@ -35,7 +35,7 @@ function EditBlog({ btnType = "Save", editType = "create" }) {
       console.log(formData.blogImage);
       if (btnType !== "save") {
         const response = await axios
-          .post("http://localhost:5001/api/v1/blog/create-blog", formData, {
+          .post("https://mern-blog-backend-ny24.onrender.com/api/v1/blog/create-blog", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -51,7 +51,7 @@ function EditBlog({ btnType = "Save", editType = "create" }) {
           });
       } else {
         const response = await axios
-          .put(`http://localhost:5001/api/v1/blog/edit-blog/${id}`, formData)
+          .put(`https://mern-blog-backend-ny24.onrender.com/api/v1/blog/edit-blog/${id}`, formData)
           .then((response) => {
             dispatch({ type: "SET_LOADING", payload: false });
           })
@@ -66,7 +66,7 @@ function EditBlog({ btnType = "Save", editType = "create" }) {
   const handleDelete = async () => {
     dispatch({ type: "SET_LOADING", payload: true });
     const response = await axios
-      .delete(`http://localhost:5001/api/v1/blog/delete-blog/${id}`)
+      .delete(`https://mern-blog-backend-ny24.onrender.com/api/v1/blog/delete-blog/${id}`)
       .then((response) => {
         console.log(response);
         const blogId = response.data.data;
@@ -89,7 +89,7 @@ function EditBlog({ btnType = "Save", editType = "create" }) {
       const getBlog = async () => {
         dispatch({ type: "SET_LOADING", payload: true });
         const response = await axios.get(
-          `http://localhost:5001/api/v1/blog/get-blog/${id}`
+          `https://mern-blog-backend-ny24.onrender.com/api/v1/blog/get-blog/${id}`
         );
         const result = response.data.data;
         console.log(response);

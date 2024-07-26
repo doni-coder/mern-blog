@@ -13,7 +13,7 @@ function NavBar() {
 
   const handleLogout = async () => {
     const response = await axios.post(
-      "http://localhost:5001/api/v1/user/logout"
+      "https://mern-blog-backend-ny24.onrender.com/api/v1/user/logout"
     );
     console.log(response);
     if (response.status === 200) {

@@ -34,7 +34,7 @@ function Signup() {
     e.preventDefault();
     dispatch({ type: "SET_LOADING", payload: true });
     const response = await axios
-      .post("http://localhost:5001/api/v1/user/register", formData, {
+      .post("https://mern-blog-backend-ny24.onrender.com/api/v1/user/register", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

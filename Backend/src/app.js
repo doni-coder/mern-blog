@@ -8,7 +8,7 @@ import blogRouter from "./routes/blog.routes.js"
 const app = express()
 
 app.use(cors({
-    origin: ["https://mern-todo-app-frontend-i78y.onrender.com","http://localhost:5173"],
+    origin: ["https://blog-frontend-l4jt.onrender.com","http://localhost:5173"],
     credentials: true,
   }))
 
