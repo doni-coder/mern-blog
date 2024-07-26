@@ -43,12 +43,13 @@ function Login() {
       });
   };
   return (
-    <div className="bg-slate-900 w-full h-screen flex justify-center overflow-hidden items-center">
+    <div className="bg-slate-900 w-full h-[91vh] flex justify-center overflow-hidden items-center">
       {context.isLoading ? <Loader /> : null}
       <motion.div
         variants={slideIn("left", "tween", 0.3, 0.2)}
         initial="hidden"
         whileInView="show"
+        className="mt-[-30px]"
       >
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
           <h2 className="text-2xl font-bold text-center mb-4 text-white">

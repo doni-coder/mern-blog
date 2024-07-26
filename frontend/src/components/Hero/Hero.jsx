@@ -26,7 +26,7 @@ function Hero() {
             variants={textVariant(0.75)}
             initial="hidden"
             whileInView="show"
-            className="text-white mt-5 mb-4 text-[18px]"
+            className="text-white bg-black mt-5 mb-4 text-[18px]"
           >
             Create your blog and share your knowledge in this platform , read other blog post from different author and shape your knowledge .
             This platform gives you freedom to share any kind of content <b>A-Z</b> .

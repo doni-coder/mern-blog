@@ -27,7 +27,7 @@ function MyBlogs() {
         <div className="w-fit ml-[83%] mb-0">
           <Button
             borderRadius="1.75rem"
-            className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
+            className=" bg-slate-900 text-white border-slate-800"
           >
             <span className="text-[20px]">
               <Link to="/create-blogs">+</Link>
@@ -38,7 +38,7 @@ function MyBlogs() {
       <div className="w-full relative flex min-h-[90vh] bg-slate-950">
         <div className="relative m-auto mt-6 sm:w-[50%] w-[90%] overflow-x-auto rounded-lg shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="text-xs  uppercase bg-gray-700 text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Image preview

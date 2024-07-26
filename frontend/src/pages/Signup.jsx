@@ -60,7 +60,7 @@ function Signup() {
   };
 
   return (
-    <div className="bg-slate-900 w-full h-screen flex justify-center overflow-hidden items-center">
+    <div className="bg-slate-900 w-full h-[91vh] flex justify-center overflow-hidden items-center">
       {context.isLoading ? <Loader /> : null}
       <motion.div
         variants={slideIn("left", "tween", 0.3, 0.2)}
@@ -68,7 +68,7 @@ function Signup() {
         whileInView="show"
       >
         <p className="text-yellow-500 pb-2 text-center text-[13px]">* Profile pic should be passport size and <br /> not more than 3mb</p>
-        <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
+        <form onSubmit={handleSubmit} className="max-w-sm mt-1 mx-auto">
           <h2 className="text-2xl font-bold text-center mb-4 text-white">
             Register
           </h2>
