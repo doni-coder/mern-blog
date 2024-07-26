@@ -28,8 +28,8 @@ function EditBlog({ btnType = "Save", editType = "create" }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const length = formData.description.length;
-    if (length < 1000) {
-      setMessage("description atleast contain 1000 character");
+    if (length < 400) {
+      setMessage("description atleast contain 400 character");
     } else {
       dispatch({ type: "SET_LOADING", payload: true });
       console.log(formData.blogImage);
