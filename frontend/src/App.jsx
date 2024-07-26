@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import {navVariants} from "./utils/motion"
 import Home from "./pages/Home";
 import NavBar from "./components/Navbar/NavBar";
 import Signup from "./pages/Signup";
@@ -13,15 +15,17 @@ import { useBlogContext } from "./context/ContextProvider";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 import SplashScreen from "./components/SplashScreen/SplashScreen";
+import Error from "./components/ErrorAlert/Error";
 
 function App() {
   const { context, getUserProfile, dispatch } = useBlogContext();
   const [flashScreen, setFlashScreen] = useState(true);
-
+  const [isOnlile, setIsOnline] = useState(navigator.onLine);
+  console.log(isOnlile);
   useEffect(() => {
     setTimeout(() => {
       setFlashScreen(false);
-    }, 3000);
+    }, 1000);
     if (context.isLoggedIn) {
       const asyncFunc = async () => {
         const response = await getUserProfile();
@@ -38,22 +42,30 @@ function App() {
 
   return (
     <div>
-      {flashScreen ? (
-        <SplashScreen />
+      {isOnlile ? (
+        <>
+          {flashScreen ? (
+            <SplashScreen />
+          ) : (
+            <div>
+              <NavBar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/explore-blogs" element={<ExploreBlogs />} />
+                <Route path="/read-blogs/:id" element={<ReadBlog />} />
+                <Route path="/create-blogs" element={<CreateBlog />} />
+                <Route path="/edit-blogs/:id" element={<EditPage />} />
+                <Route path="/my-blogs" element={<MyBlogs />} />
+              </Routes>
+            </div>
+          )}
+        </>
       ) : (
-        <div>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/explore-blogs" element={<ExploreBlogs />} />
-            <Route path="/read-blogs/:id" element={<ReadBlog />} />
-            <Route path="/create-blogs" element={<CreateBlog />} />
-            <Route path="/edit-blogs/:id" element={<EditPage />} />
-            <Route path="/my-blogs" element={<MyBlogs />} />
-          </Routes>
-        </div>
+        <motion.div variants={navVariants} initial="hidden" whileInView={"show"} className="flex justify-center mt-5">
+          <Error/>
+        </motion.div>
       )}
     </div>
   );

@@ -13,7 +13,9 @@ const createBlog = asyncHandler(async (req, res) => {
   const blogImageLocal = req.file?.path;
 
   if (!blogImageLocal) {
-    return res.status(400).json(new ApiResponse(400, {},"please provide blogImage"));
+    return res
+      .status(400)
+      .json(new ApiResponse(400, {}, "please provide blogImage"));
   }
 
   const blogImage = await uploadToCloudinary(blogImageLocal);
@@ -32,6 +34,7 @@ const createBlog = asyncHandler(async (req, res) => {
     title,
     description,
     blogImage: blogImage.url || "",
+    views: 0,
     author: user._id,
   });
 
@@ -49,6 +52,7 @@ const createBlog = asyncHandler(async (req, res) => {
 });
 
 const editBlog = asyncHandler(async (req, res) => {
+  const user = req.user;
   const { id } = req.params;
   const { title, description } = req.body;
   if (!id) {
@@ -59,22 +63,38 @@ const editBlog = asyncHandler(async (req, res) => {
 
   const oldBlogImage = await Blog.findById(id);
 
+  const updatedBlogData = {
+    title,
+    description,
+    blogImage: blogImage?.url || oldBlogImage.blogImage,
+  };
+
   const blog = await Blog.findByIdAndUpdate(
     id,
     {
-      $set: {
-        title,
-        description,
-        blogImage: blogImage?.url || oldBlogImage.blogImage,
-      },
+      $set: updatedBlogData,
     },
     {
       new: true,
     }
   );
+
   if (!blog) {
     throw new ApiError(500, "unable to update blog");
   }
+
+  user.blogs = user.blogs.map((blog) => {
+    if (blog._id == id) {
+      return { ...blog, ...updatedBlogData };
+    }
+    return blog;
+  });
+
+  await User.findByIdAndUpdate(user._id, {
+    $set: {
+      blogs: user.blogs,
+    },
+  });
 
   return res.status(200).json(new ApiResponse(200, blog, "blog updated"));
 });
@@ -122,11 +142,35 @@ const getBlogById = asyncHandler(async (req, res) => {
     throw new ApiError("not authenticated");
   }
   const { id } = req.params;
-  const blog = await Blog.findById(id);
-  if (!blog) {
+
+  const newBlog = await Blog.findByIdAndUpdate(
+    id,
+    {
+      $inc: { views: 1 },
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!newBlog) {
     throw new ApiError(404, "blog not found");
   }
-  return res.status(200).json(new ApiResponse(200, blog, "fetched blog"));
+
+  user.blogs = user.blogs.map((blog) => {
+    if (blog._id == id) {
+      return { ...blog, views: newBlog.views };
+    }
+    return blog;
+  });
+
+  await User.findByIdAndUpdate(user._id, {
+    $set: {
+      blogs: user.blogs,
+    },
+  });
+
+  return res.status(200).json(new ApiResponse(200, newBlog, "fetched blog"));
 });
 
 export { createBlog, editBlog, deleteBlog, getAllBlogs, getBlogById };

@@ -59,6 +59,7 @@ function MyBlogs() {
                     img={blog.blogImage}
                     title={blog.title}
                     blogId={blog._id}
+                    views={blog.views}
                   />
                 );
               })}

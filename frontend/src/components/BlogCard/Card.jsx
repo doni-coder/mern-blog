@@ -3,8 +3,9 @@ import "./Card.css";
 import { motion } from "framer-motion";
 import { zoomIn } from "../../utils/motion";
 import { Link } from "react-router-dom";
+import { FiEye } from "react-icons/fi";
 
-function Card({ title, _id, description, blogImage }) {
+function Card({ title, _id, description, blogImage, views }) {
   return (
     <motion.div
       variants={zoomIn(0.2, 0.5)}
@@ -17,11 +18,17 @@ function Card({ title, _id, description, blogImage }) {
           <img className="" src={blogImage} alt="" />
         </div>
         <div className="content">
-          <p href="#">
-            <span className="title">{title}</span>
-          </p>
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="title">{title}</span>
+            </div>
+            <div className="flex pt-0 gap-2 ">
+              <FiEye className="text-[20px] text-gray-200" />
+              <span className="text-gray-200 text-[15px]">{views}</span>
+            </div>
+          </div>
 
-          <p className="desc">
+          <p className="desc pt-2">
             {description.length < 90
               ? description
               : description.slice(0, 90) + "..."}

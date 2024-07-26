@@ -20,6 +20,7 @@ function ExploreBlogs() {
               title={blog.title}
               description={blog.description}
               blogImage={blog.blogImage}
+              views={blog.views}
             />
           ))}
         </div>

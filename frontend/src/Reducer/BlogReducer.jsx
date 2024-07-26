@@ -48,15 +48,17 @@ const blogReducer = (state, action) => {
         singleBlog: action.payload,
       };
     case "DELETE_BLOG":
-      const {blog,id} = action.payload
-      const updatedBlog = blog.filter((item)=> {return id != item._id})
+      const { blog, id } = action.payload;
+      const updatedBlog = blog.filter((item) => {
+        return id != item._id;
+      });
       console.log("ID to delete:", id);
       console.log(blog);
       console.log(updatedBlog);
-      return{
+      return {
         ...state,
-        blogs:updatedBlog
-      }
+        blogs: updatedBlog,
+      };
     default:
       break;
   }

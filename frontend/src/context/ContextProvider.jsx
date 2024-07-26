@@ -9,7 +9,7 @@ const blogContext = createContext({});
 
 const ContextProvider = ({ children }) => {
   const initialState = {
-    isLoggedIn: true,
+    isLoggedIn: false,
     profilePic: "",
     blogs: [],
     isLoading: false,
