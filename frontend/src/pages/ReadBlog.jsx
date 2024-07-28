@@ -23,7 +23,9 @@ function ReadBlog({ title, description, blogImage }) {
   }, [id]);
 
   return context.isLoading ? (
-    <Loader />
+    <div className="w-full h-[91vh] bg-slate-950">
+      <Loader />
+    </div>
   ) : (
     <div className="w-full flex justify-center min-h-screen bg-slate-950 pt-7">
       <div className="w-[90%]  md:w-[50%]">
