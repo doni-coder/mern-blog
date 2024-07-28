@@ -9,14 +9,18 @@ import Loader from "../components/Loader/Loader";
 
 function Login() {
   const { dispatch, context, message, setMessage } = useBlogContext();
+
   useEffect(()=>{
     setMessage("")
   },[])
+
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
   const handleChange = (e) => {
     const name = e.target.name;
     setFormData({
@@ -24,6 +28,7 @@ function Login() {
       [name]: e.target.value,
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch({ type: "SET_LOADING", payload: true });
@@ -42,6 +47,7 @@ function Login() {
         dispatch({ type: "SET_LOADING", payload: false });
       });
   };
+  
   return (
     <div className="bg-slate-900 w-full h-[91vh] flex justify-center overflow-hidden items-center">
       {context.isLoading ? <Loader /> : null}

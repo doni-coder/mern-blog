@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useBlogContext } from "../context/ContextProvider";
 axios.defaults.withCredentials = true;
+import Loader from "../components/Loader/Loader";
 
 function ReadBlog({ title, description, blogImage }) {
   const { id } = useParams();
@@ -21,7 +22,9 @@ function ReadBlog({ title, description, blogImage }) {
     getSingleBlog();
   }, [id]);
 
-  return (
+  return context.isLoading ? (
+    <Loader />
+  ) : (
     <div className="w-full flex justify-center min-h-screen bg-slate-950 pt-7">
       <div className="w-[90%]  md:w-[50%]">
         <div className="">

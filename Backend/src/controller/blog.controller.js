@@ -157,16 +157,18 @@ const getBlogById = asyncHandler(async (req, res) => {
     throw new ApiError(404, "blog not found");
   }
 
-  user.blogs = user.blogs.map((blog) => {
+  const blogAuthor = await User.findById(newBlog.author);
+
+  const authorBlogs = blogAuthor.blogs.map((blog) => {
     if (blog._id == id) {
       return { ...blog, views: newBlog.views };
     }
     return blog;
   });
 
-  await User.findByIdAndUpdate(user._id, {
+  await User.findByIdAndUpdate(newBlog.author, {
     $set: {
-      blogs: user.blogs,
+      blogs: authorBlogs,
     },
   });
 
